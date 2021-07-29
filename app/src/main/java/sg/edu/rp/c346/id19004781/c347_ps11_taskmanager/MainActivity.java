@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         lvTasks = findViewById(R.id.lvTasks);
         btnAddTask = findViewById(R.id.btnAddTask);
-        
+
         DBHelper dbh = new DBHelper(MainActivity.this);
 
         al = dbh.getItemsOfTasks();
