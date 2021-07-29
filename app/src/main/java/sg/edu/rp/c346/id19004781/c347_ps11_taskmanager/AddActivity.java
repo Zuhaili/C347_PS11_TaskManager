@@ -11,8 +11,10 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import java.util.Calendar;
 
@@ -33,6 +35,28 @@ public class AddActivity extends AppCompatActivity {
 
         // Temporary
         setNotification("this is the name!", "description!!", 5);
+
+        btnAddTask.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                String name = etName.getText().toString();
+                String description = etDescription.getText().toString();
+                String time = etTime.getText().toString();
+
+
+                DBHelper db = new DBHelper(AddActivity.this);
+                long inserted_task = db.insertTask(name, description, time);
+
+                db.close();
+
+                if (inserted_task != -1) {
+                    Toast.makeText(AddActivity.this, "Insert successful", Toast.LENGTH_SHORT).show();
+
+                }
+            }
+        });
+
+
     }
 
     private void setNotification(String name, String description, int seconds) {
