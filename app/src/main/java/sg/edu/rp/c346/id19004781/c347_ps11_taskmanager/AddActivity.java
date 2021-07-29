@@ -3,6 +3,7 @@ package sg.edu.rp.c346.id19004781.c347_ps11_taskmanager;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 import java.util.Calendar;
 
 public class AddActivity extends AppCompatActivity {
+    int reqCode = 12345;
     EditText etName, etDescription, etTime;
     Button btnAddTask, btnCancel;
 
@@ -53,6 +55,21 @@ public class AddActivity extends AppCompatActivity {
                     Toast.makeText(AddActivity.this, "Insert successful", Toast.LENGTH_SHORT).show();
 
                 }
+
+                Calendar cal = Calendar.getInstance();
+                cal.add(Calendar.SECOND, 5);
+
+                Intent intent = new Intent(AddActivity.this,
+                        ScheduledNotificationReceiver.class);
+
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                        AddActivity.this, reqCode,
+                        intent, PendingIntent.FLAG_CANCEL_CURRENT);
+
+                AlarmManager am = (AlarmManager)
+                        getSystemService(Activity.ALARM_SERVICE);
+                am.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(),
+                        pendingIntent);
             }
         });
 
