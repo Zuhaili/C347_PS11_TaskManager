@@ -19,10 +19,10 @@ public class AddActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add);
 
         // Temporary
-        setNotification(5);
+        setNotification("Task Manager Reminder", "Post Letters", 5);
     }
 
-    private void setNotification(int seconds) {
+    private void setNotification(String name, String description, int seconds) {
         int notificationID = 888;
         int requestCode = 123;
 
@@ -43,13 +43,22 @@ public class AddActivity extends AppCompatActivity {
                 ( AddActivity.this, requestCode, intent,
                         PendingIntent.FLAG_CANCEL_CURRENT);
 
+        NotificationCompat.BigTextStyle bigText = new
+                NotificationCompat.BigTextStyle();
+        bigText.setBigContentTitle("Big Text – Long Content");
+        bigText.bigText("This is one big text" +
+                " - A quick brown fox jumps over a lazy brown dog "+
+                "\nLorem ipsum dolor sit amet, sea eu quod des");
+        bigText.setSummaryText("Reflection Journal?");
+
         // Build notification
         NotificationCompat.Builder builder = new
                 NotificationCompat.Builder(AddActivity.this, "default");
-        builder.setContentTitle("Amazing Offer!");
-        builder.setContentText("Subject");
+        builder.setContentTitle(name);
+        builder.setContentText(description);
         builder.setSmallIcon(android.R.drawable.btn_star_big_off);
         builder.setContentIntent(pIntent);
+        builder.setStyle(bigText);
         builder.setAutoCancel(true);
 
         Notification n = builder.build();
