@@ -41,27 +41,28 @@ public class ScheduledNotificationReceiver extends BroadcastReceiver {
         PendingIntent pIntent = PendingIntent.getActivity(context, reqCode,
                 i, PendingIntent.FLAG_CANCEL_CURRENT);
 
-        // Bigtext
-        NotificationCompat.BigTextStyle bigText = new
-                NotificationCompat.BigTextStyle();
-        bigText.setBigContentTitle(name + " (bigtext)");
-        bigText.bigText(description + " (bigtext)\n");
+        // bigText
+//      NotificationCompat.BigTextStyle bigText = new NotificationCompat.BigTextStyle();
+//      bigText.setBigContentTitle(name + " (bigtext)");
+//      bigText.bigText(description + " (bigtext)\n");
 
-        Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.rare_penguin);
+        Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.rare_penguin); // Bitmap for bigPicture
 
-        // build notification
+        // bigPicture
+        NotificationCompat.BigPictureStyle bigPicture = new NotificationCompat.BigPictureStyle();
+        bigPicture.bigPicture(bitmap);
+        bigPicture.bigLargeIcon(null);
+        bigPicture.setBigContentTitle(name);
+        bigPicture.setSummaryText(description + "\n");
+
+        // Build notification
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "default");
-        builder.setContentTitle(name);
-        builder.setContentText(description);
+        builder.setContentTitle("Task Manager Reminder");
+        builder.setContentText(name);
         builder.setSmallIcon(android.R.drawable.ic_dialog_info);
         builder.setContentIntent(pIntent);
-        builder.setStyle(bigText); // Bigtext
-        builder.setStyle(new NotificationCompat.BigPictureStyle()
-                .bigPicture(bitmap)
-                .bigLargeIcon(null)
-                .setBigContentTitle(name + " (bigtext)")
-                .setSummaryText(description + " (bigtext)\n")
-        ); // Image
+//      builder.setStyle(bigText); // bigText
+        builder.setStyle(bigPicture); // bigPicture
         builder.setAutoCancel(true);
 
         Notification n = builder.build();
