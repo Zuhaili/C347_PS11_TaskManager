@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -41,30 +42,47 @@ public class ScheduledNotificationReceiver extends BroadcastReceiver {
         PendingIntent pIntent = PendingIntent.getActivity(context, reqCode,
                 i, PendingIntent.FLAG_CANCEL_CURRENT);
 
-        // bigText
-//      NotificationCompat.BigTextStyle bigText = new NotificationCompat.BigTextStyle();
-//      bigText.setBigContentTitle(name + " (bigtext)");
-//      bigText.bigText(description + " (bigtext)\n");
 
-        Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.rare_penguin); // Bitmap for bigPicture
-
-        // bigPicture
-        NotificationCompat.BigPictureStyle bigPicture = new NotificationCompat.BigPictureStyle();
-        bigPicture.bigPicture(bitmap);
-        bigPicture.bigLargeIcon(null);
-        bigPicture.setBigContentTitle(name);
-        bigPicture.setSummaryText(description + "\n");
-
-        // Build notification
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "default");
-        builder.setContentTitle("Task Manager Reminder");
-        builder.setContentText(name);
+        NotificationCompat.BigTextStyle bigText = new NotificationCompat.BigTextStyle();
+
+        bigText.setBigContentTitle("Whoa! I feel good, I knew that I would, now\n" +
+                "I feel good, I knew that I would, now\n" +
+                "So good, so good, I got you\n" +
+                "Whoa! I feel nice, like sugar and spice\n" +
+                "I feel nice, like sugar and spice\n" +
+                "So nice, so nice, I got you\n" +
+                "When I hold you in my arms\n" +
+                "I know that I can't do no wrong\n" +
+                "And when I hold you in my arms\n" +
+                "My love won't do you no harm\n" +
+                "And I feel nice, like sugar and spice\n" +
+                "I feel nice, like sugar and spice\n" +
+                "So nice, so nice, I got you\n" +
+                "When I hold you in my arms\n" +
+                "I know that I can't do no wrong\n" +
+                "And when I hold you in my arms\n" +
+                "My love can't do me no harm\n" +
+                "And I feel nice, like sugar and spice\n" +
+                "I feel nice, like sugar and spice\n" +
+                "So nice, so nice, 'cause I got you\n" +
+                "Whoa! And I feel good, I knew that I would, now\n" +
+                "I feel good, I knew that I would\n" +
+                "So good, so good, 'cause I got you\n" +
+                "So good, so good, 'cause I got you\n" +
+                "So good, so good, 'cause I got you\n" +
+                "Hey\n" +
+                "Oh-whoo");
+
+
+        builder.setContentTitle("Bad Day (I Feel Good song) Lyrics");
+        builder.setContentText("Birds flying high, you know how I feel");
         builder.setSmallIcon(android.R.drawable.ic_dialog_info);
         builder.setContentIntent(pIntent);
-//      builder.setStyle(bigText); // bigText
-        builder.setStyle(bigPicture); // bigPicture
+        builder.setStyle(bigText);
         builder.setAutoCancel(true);
-
+        builder.setLights(Color.GREEN, 69, 666);
+        builder.setVibrate(new long[]{0, 666, 69, 420});
         Notification n = builder.build();
         notificationManager.notify(123, n);
 
