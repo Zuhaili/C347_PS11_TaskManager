@@ -10,13 +10,23 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.widget.Button;
+import android.widget.EditText;
 
 public class AddActivity extends AppCompatActivity {
+    EditText etName, etDescription, etTime;
+    Button btnAddTask, btnCancel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add);
+
+        etName = findViewById(R.id.etName);
+        etDescription = findViewById(R.id.etDescription);
+        etTime = findViewById(R.id.etTime);
+        btnAddTask = findViewById(R.id.btnTask);
+        btnCancel = findViewById(R.id.btnCancel);
 
         // Temporary
         setNotification("Task Manager Reminder", "Post Letters", 5);
