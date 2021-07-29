@@ -75,7 +75,7 @@ public class ScheduledNotificationReceiver extends BroadcastReceiver {
                 "Oh-whoo");
 
 
-        builder.setContentTitle("James Brown(I Feel Good song) Lyrics");
+        builder.setContentTitle("James Brown (I Feel Good song) Lyrics");
         builder.setContentText("James Joseph Brown (May 3, 1933 – December 25, 2006) was an American singer, songwriter, dancer, musician, record producer, and bandleader. The central progenitor of funk music and a major figure of 20th-century music, he is often referred to by the honorific nicknames \"Godfather of Soul\", \"Mr. Dynamite\", and \"Soul Brother No. 1\".In a career that lasted over 50 years, he influenced the development of several music genres.");
         builder.setSmallIcon(android.R.drawable.ic_dialog_info);
         builder.setContentIntent(pIntent);
