@@ -1,39 +1,47 @@
 package sg.edu.rp.c346.id19004781.c347_ps11_taskmanager;
 
+
+
 import java.io.Serializable;
 
 class Task implements Serializable {
+    private int id;
     private String name;
-    private String description;
-    private String remainderTimeSecond;
+    private String desc;
 
-    public Task(String name, String description, String remainderTimeSecond) {
+    public Task(int id, String name, String desc) {
+        this.id = id;
+        this.desc = desc;
         this.name = name;
-        this.description = description;
-        this.remainderTimeSecond = remainderTimeSecond;
     }
 
     public String getName() {
         return name;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
 
-    public String getDescription() {
-        return description;
-    }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getRemainderTimeSecond() {
-        return remainderTimeSecond;
-    }
-
-    public void setRemainderTimeSecond(String remainderTimeSecond) {
-        this.remainderTimeSecond = remainderTimeSecond;
+    @Override
+    public String toString() {
+        return id + "\n" + desc + "\n" + name;
     }
 }

@@ -9,123 +9,87 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
+
 public class DBHelper extends SQLiteOpenHelper {
-    private static final String DATABASE_NAME = "Tasks.db";
+
+    private static final String DATABASE_NAME = "tasks.db";
     private static final int DATABASE_VERSION = 2;
-    private static final String TABLE_TASKS = "tasks";
+    private static final String TABLE_TASK = "task";
     private static final String COLUMN_ID = "_id";
-
-    private static final String COLUMN_NAME = "name";
+    private static final String COLUMN_TASK_NAME = "task_name";
     private static final String COLUMN_DESCRIPTION = "description";
-    private static final String COLUMN_REMAINDER_TIME_SECOND = "remainder_time_second";
 
-    //DBHelper constructor
     public DBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
-
     @Override
     public void onCreate(SQLiteDatabase db) {
-
-        String createTasksTableSql = "CREATE TABLE " + TABLE_TASKS + "("
+        String createNoteTableSql = "CREATE TABLE "
+                + TABLE_TASK + "("
                 + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-                + COLUMN_NAME + " TEXT,"
-                + COLUMN_DESCRIPTION + " TEXT,"
-                + COLUMN_REMAINDER_TIME_SECOND + " TEXT )";
+                + COLUMN_TASK_NAME + " TEXT,"
+                + COLUMN_DESCRIPTION + " TEXT) ";
 
-        db.execSQL(createTasksTableSql);
-        Log.i("info", "Created tables");
+        db.execSQL(createNoteTableSql);
+
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_TASKS);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_TASK);
         onCreate(db);
+        db.execSQL("ALTER TABLE " + TABLE_TASK + " ADD COLUMN module_name TEXT ");
     }
 
-    //DBHelper Insert new notes
-    public long insertTask(String name, String description, String time) {
-
+    public long addTask(String taskName, String taskDescription) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-
-        values.put(COLUMN_NAME, name);
-        values.put(COLUMN_DESCRIPTION, description);
-        values.put(COLUMN_REMAINDER_TIME_SECOND, time);
-
-
-        long result = db.insert(TABLE_TASKS, null, values);
+        values.put(COLUMN_TASK_NAME, taskName);
+        values.put(COLUMN_DESCRIPTION, taskDescription);
+        long result = db.insert(TABLE_TASK, null, values);
         db.close();
-        Log.d("SQL Insert", "ID:" + result); //id returned, shouldn’t be -1
+        Log.d("SQL Insert","ID:"+ result); //id returned, shouldn’t be -1
         return result;
     }
 
-    // TODO: Insert a new record.
-    public long insertSong(String name, String description, String time) {
+    public ArrayList<Task> getAllTasks() {
+        ArrayList<Task> tasks = new ArrayList<Task>();
 
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(COLUMN_NAME, name);
-        values.put(COLUMN_DESCRIPTION, description);
-        values.put(COLUMN_REMAINDER_TIME_SECOND, time);
+        String selectQuery = "SELECT "
+                + COLUMN_ID + ","
+                + COLUMN_TASK_NAME + ","
+                + COLUMN_DESCRIPTION
+                + " FROM " + TABLE_TASK;
 
-
-        // TODO: This line of code will return a number
-        //  that represents the record id (the primary key, _id)
-        //  of the table for the record that was inserted.
-        //  If the insert fails, the id will be -1.
-        //  As a result, we can use it to determine whether or not a record was successfully inserted.
-        long result = db.insert(TABLE_TASKS, null, values);
-
-        db.close();
-
-        Log.d("SQL Insert", "ID:" + result); //id returned, shouldn’t be -1
-        return result;
-    }
-
-    // TODO: Record retrieval from database table
-    //  This method will retrieve the records and convert each one into a String.
-    //  Following that, the Strings are placed in an ArrayList to be returned.
-    public ArrayList<Task> getItemsOfTasks() {
-
-        // Create an ArrayList that holds String objects
-        ArrayList<Task> tasks = new ArrayList<>();
-
-        // Select all the tasks' description
-        String selectQuery = "SELECT * FROM " + TABLE_TASKS;
-
-        // Get the instance of database to read
         SQLiteDatabase db = this.getReadableDatabase();
-
-        // Run the SQL query and get back the Cursor object
         Cursor cursor = db.rawQuery(selectQuery, null);
-
-        // moveToFirst() moves to first row, null if no records
         if (cursor.moveToFirst()) {
-
-            // Loop while moveToNext() points to next row
-            //  and returns true; moveToNext() returns false
-            //  when no more next row to move to
             do {
-                // Add the task content to the ArrayList object
-                //  getString(0) retrieves first column data
-                //  getString(1) return second column data
-                //  getInt(0) if data is an integer value
-                String name = cursor.getString(0);
-                String description = cursor.getString(1);
-                String time = cursor.getString(2);
-
-                Task task = new Task(name, description, time);
+                Log.d("Message",cursor.getString(1));
+                int id = cursor.getInt(0);
+                String taskName = cursor.getString(1);
+                String taskDescription = cursor.getString(2);
+                Task task = new Task(id, taskName, taskDescription);
                 tasks.add(task);
-
-
             } while (cursor.moveToNext());
         }
-        // Close connection
         cursor.close();
         db.close();
-
         return tasks;
     }
+
+    public int updateTask(Task data){
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_TASK_NAME, data.getName());
+        values.put(COLUMN_DESCRIPTION, data.getDesc());
+        String condition = COLUMN_ID + "= ?";
+        String[] args = {String.valueOf(data.getId())};
+        int result = db.update(TABLE_TASK, values, condition, args);
+        db.close();
+        return result;
+    }
+
 }
