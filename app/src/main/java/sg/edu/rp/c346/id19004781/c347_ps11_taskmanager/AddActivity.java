@@ -21,6 +21,7 @@ public class AddActivity extends AppCompatActivity {
     DBHelper dbh;
     String dataName, dataDescription;
     long inserted_id;
+    AlarmManager am;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,9 +33,19 @@ public class AddActivity extends AppCompatActivity {
         etName = findViewById(R.id.etName);
         etDescription = findViewById(R.id.etDescription);
         etTime = findViewById(R.id.etTime);
-        initialize();
+//        initialize();
 
         btnAddTask.setOnClickListener(view -> {
+
+
+            String name = etName.getText().toString();
+            String description = etDescription.getText().toString();
+            int time = Integer.parseInt(etTime.getText().toString());
+
+            DBHelper dbh = new DBHelper(AddActivity.this);
+            inserted_id = dbh.addTask(name, description);
+            dbh.close();
+
 
 
             if (inserted_id != -1) {
@@ -42,6 +53,7 @@ public class AddActivity extends AppCompatActivity {
                 cal.add(Calendar.SECOND, dataSeconds);
 
                 Intent i = new Intent(AddActivity.this, ScheduledNotificationReceiver.class);
+
                 PendingIntent pendingIntent = PendingIntent.getBroadcast(AddActivity.this, reqCode, i, PendingIntent.FLAG_CANCEL_CURRENT);
 
                 AlarmManager am = (AlarmManager) getSystemService(Activity.ALARM_SERVICE);
@@ -56,12 +68,12 @@ public class AddActivity extends AppCompatActivity {
     }
 
 
-    public void initialize() {
-        dataName = etName.getText().toString();
-        dataDescription = etDescription.getText().toString();
-        dataSeconds = Integer.parseInt(etTime.getText().toString());
-        dbh = new DBHelper(AddActivity.this);
-        inserted_id = dbh.addTask(dataName, dataDescription);
-        dbh.close();
-    }
+//    public void initialize() {
+//        dataName = etName.getText().toString();
+//        dataDescription = etDescription.getText().toString();
+//        dataSeconds = Integer.parseInt(etTime.getText().toString());
+//        dbh = new DBHelper(AddActivity.this);
+//        inserted_id = dbh.addTask(dataName, dataDescription);
+//        dbh.close();
+//    }
 }
