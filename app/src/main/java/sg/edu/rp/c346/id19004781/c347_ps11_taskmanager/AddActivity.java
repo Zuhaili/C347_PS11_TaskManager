@@ -1,79 +1,71 @@
 package sg.edu.rp.c346.id19004781.c347_ps11_taskmanager;
 
-import android.app.Activity;
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.Calendar;
 
 public class AddActivity extends AppCompatActivity {
-
-    Button btnAddTask, btnCancel;
     EditText etName, etDescription, etTime;
-    int reqCode = 12345, dataSeconds;
-    DBHelper dbh;
-    String dataName, dataDescription;
-    long inserted_id;
-    AlarmManager am;
+    Button btnAddTask, btnCancel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add);
 
-        btnCancel = findViewById(R.id.btnCancel);
-        btnAddTask = findViewById(R.id.btnAddTask);
         etName = findViewById(R.id.etName);
         etDescription = findViewById(R.id.etDescription);
         etTime = findViewById(R.id.etTime);
-//        initialize();
+        btnAddTask = findViewById(R.id.btnAddTask);
+        btnCancel = findViewById(R.id.btnCancel);
 
-        btnAddTask.setOnClickListener(view -> {
+        btnAddTask.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String name = etName.getText().toString();
+                String description = etDescription.getText().toString();
+                Integer time = Integer.parseInt(etTime.getText().toString());
 
+                DBHelper db = new DBHelper(AddActivity.this);
+                long insertId = db.addTask(name, description);
+                db.close();
 
-            String name = etName.getText().toString();
-            String description = etDescription.getText().toString();
-            int time = Integer.parseInt(etTime.getText().toString());
+                if (insertId != -1) {
+                    int notificationID = 888;
+                    int requestCode = 123;
 
-            DBHelper dbh = new DBHelper(AddActivity.this);
-            inserted_id = dbh.addTask(name, description);
-            dbh.close();
+                    Calendar cal = Calendar.getInstance();
+                    cal.add(Calendar.SECOND, time);
 
+                    Intent intent1 = new Intent(AddActivity.this,
+                            ScheduledNotificationReceiver.class);
 
+                    intent1.putExtra("name", name);
+                    intent1.putExtra("description", description);
 
-            if (inserted_id != -1) {
-                Calendar cal = Calendar.getInstance();
-                cal.add(Calendar.SECOND, dataSeconds);
+                    PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                            AddActivity.this, requestCode,
+                            intent1, PendingIntent.FLAG_CANCEL_CURRENT);
 
-                Intent i = new Intent(AddActivity.this, ScheduledNotificationReceiver.class);
+                    AlarmManager am = (AlarmManager)
+                            getSystemService(AddActivity.ALARM_SERVICE);
+                    am.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(),
+                            pendingIntent);
 
-                PendingIntent pendingIntent = PendingIntent.getBroadcast(AddActivity.this, reqCode, i, PendingIntent.FLAG_CANCEL_CURRENT);
-
-                AlarmManager am = (AlarmManager) getSystemService(Activity.ALARM_SERVICE);
-                am.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), pendingIntent);
-
-                Toast.makeText(AddActivity.this, "A new task has been created!", Toast.LENGTH_SHORT).show();
-                finish();
+                    finish();
+                }
             }
         });
 
-        btnCancel.setOnClickListener(view -> finish());
     }
 
-
-//    public void initialize() {
-//        dataName = etName.getText().toString();
-//        dataDescription = etDescription.getText().toString();
-//        dataSeconds = Integer.parseInt(etTime.getText().toString());
-//        dbh = new DBHelper(AddActivity.this);
-//        inserted_id = dbh.addTask(dataName, dataDescription);
-//        dbh.close();
-//    }
 }

@@ -9,9 +9,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 
 import androidx.core.app.NotificationCompat;
+import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat;
 
 public class ScheduledNotificationReceiver extends BroadcastReceiver {
 
@@ -55,7 +58,10 @@ public class ScheduledNotificationReceiver extends BroadcastReceiver {
         builder.setStyle(bigText); // Bigtext
         builder.setStyle(new NotificationCompat.BigPictureStyle()
                 .bigPicture(bitmap)
-                .bigLargeIcon(null)); // Image
+                .bigLargeIcon(null)
+                .setBigContentTitle(name + " (bigtext)")
+                .setSummaryText(description + " (bigtext)\n")
+        ); // Image
         builder.setAutoCancel(true);
 
         Notification n = builder.build();
