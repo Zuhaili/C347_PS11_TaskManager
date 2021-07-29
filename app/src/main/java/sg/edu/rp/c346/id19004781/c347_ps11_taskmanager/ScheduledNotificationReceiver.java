@@ -42,47 +42,34 @@ public class ScheduledNotificationReceiver extends BroadcastReceiver {
         PendingIntent pIntent = PendingIntent.getActivity(context, reqCode,
                 i, PendingIntent.FLAG_CANCEL_CURRENT);
 
+        // bigText
+//      NotificationCompat.BigTextStyle bigText = new NotificationCompat.BigTextStyle();
+//      bigText.setBigContentTitle(name + " (bigtext)");
+//      bigText.bigText(description + " (bigtext)\n");
 
+        Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.rare_penguin); // Bitmap for bigPicture
+
+        // bigPicture
+        NotificationCompat.BigPictureStyle bigPicture = new NotificationCompat.BigPictureStyle();
+        bigPicture.bigPicture(bitmap);
+        bigPicture.bigLargeIcon(null);
+        bigPicture.setBigContentTitle("Task: " + name);
+        bigPicture.setSummaryText("Description: " + description + "\n");
+
+        // Build notification
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "default");
-        NotificationCompat.BigTextStyle bigText = new NotificationCompat.BigTextStyle();
-
-        bigText.setBigContentTitle("Whoa! I feel good, I knew that I would, now\n" +
-                "I feel good, I knew that I would, now\n" +
-                "So good, so good, I got you\n" +
-                "Whoa! I feel nice, like sugar and spice\n" +
-                "I feel nice, like sugar and spice\n" +
-                "So nice, so nice, I got you\n" +
-                "When I hold you in my arms\n" +
-                "I know that I can't do no wrong\n" +
-                "And when I hold you in my arms\n" +
-                "My love won't do you no harm\n" +
-                "And I feel nice, like sugar and spice\n" +
-                "I feel nice, like sugar and spice\n" +
-                "So nice, so nice, I got you\n" +
-                "When I hold you in my arms\n" +
-                "I know that I can't do no wrong\n" +
-                "And when I hold you in my arms\n" +
-                "My love can't do me no harm\n" +
-                "And I feel nice, like sugar and spice\n" +
-                "I feel nice, like sugar and spice\n" +
-                "So nice, so nice, 'cause I got you\n" +
-                "Whoa! And I feel good, I knew that I would, now\n" +
-                "I feel good, I knew that I would\n" +
-                "So good, so good, 'cause I got you\n" +
-                "So good, so good, 'cause I got you\n" +
-                "So good, so good, 'cause I got you\n" +
-                "Hey\n" +
-                "Oh-whoo");
-
-
-        builder.setContentTitle("James Brown (I Feel Good song) Lyrics");
-        builder.setContentText("James Joseph Brown (May 3, 1933 – December 25, 2006) was an American singer, songwriter, dancer, musician, record producer, and bandleader. The central progenitor of funk music and a major figure of 20th-century music, he is often referred to by the honorific nicknames \"Godfather of Soul\", \"Mr. Dynamite\", and \"Soul Brother No. 1\".In a career that lasted over 50 years, he influenced the development of several music genres.");
+        builder.setContentTitle("Task Manager Reminder");
+        builder.setContentText(name);
         builder.setSmallIcon(android.R.drawable.ic_dialog_info);
         builder.setContentIntent(pIntent);
-        builder.setStyle(bigText);
+//      builder.setStyle(bigText); // bigText (expandable)
+        builder.setStyle(bigPicture); // bigPicture
+        builder.setLights(0xFFFF0000, 100, 100); // LED
+//      builder.setLights(Color.RED, 3000, 3000); // LED (using Color class)
+        builder.setDefaults(Notification.DEFAULT_ALL); // Sound
+        builder.setVibrate(new long[] { 1000, 1000, 1000, 1000, 1000 }); // Vibration
         builder.setAutoCancel(true);
-        builder.setLights(Color.GREEN, 69, 666);
-        builder.setVibrate(new long[]{0, 666, 69, 420});
+
         Notification n = builder.build();
         notificationManager.notify(123, n);
 
